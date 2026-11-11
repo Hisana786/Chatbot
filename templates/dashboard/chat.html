@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block title %}Chatbot | LaptopCare{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card p-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <h1 class="h3 mb-1">LaptopCare Chatbot</h1>
+                    <p class="text-muted mb-0">Ask about inventory, orders, suppliers, or product availability.</p>
+                </div>
+                <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary btn-sm">Back to Dashboard</a>
+            </div>
+
+            <div id="chatMessages" class="border rounded p-3 mb-3" style="min-height: 300px; max-height: 420px; overflow-y: auto; background: #0b0b0f; border-color: rgba(216, 194, 244, 0.2); color: #f5f3ff;">
+                <div class="mb-2">
+                    <div class="d-inline-block border rounded px-3 py-2 shadow-sm" style="background: #1a1a1f; border-color: rgba(216, 194, 244, 0.15); color: #f5f3ff;">
+                        Hello! I’m the LaptopCare assistant. Ask me anything about stock, orders, or suppliers.
+                    </div>
+                </div>
+            </div>
+
+            <form id="chatForm">
+                <div class="input-group">
+                    <input id="chatInput" type="text" class="form-control form-control-lg" placeholder="Type your message..." aria-label="Chat message" required style="background: #0b0b0f; color: #f5f3ff; border: 1px solid rgba(216, 194, 244, 0.2); border-right: none;">
+                    <button class="btn btn-primary btn-lg" type="submit" style="background: linear-gradient(135deg, #8b5cf6, #c084fc); border: none;">Send</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    const chatForm = document.getElementById('chatForm');
+    const chatInput = document.getElementById('chatInput');
+    const chatMessages = document.getElementById('chatMessages');
+
+    function addMessage(text, isUser) {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'mb-2 text-end';
+        if (!isUser) {
+            wrapper.className = 'mb-2';
+        }
+
+        const bubble = document.createElement('div');
+        bubble.className = 'd-inline-block rounded px-3 py-2 shadow-sm';
+        bubble.style.maxWidth = '75%';
+        bubble.style.whiteSpace = 'pre-wrap';
+        bubble.style.background = isUser ? 'linear-gradient(135deg, #8b5cf6, #c084fc)' : '#1a1a1f';
+        bubble.style.color = '#f5f3ff';
+        bubble.style.border = '1px solid rgba(216, 194, 244, 0.15)';
+        bubble.textContent = text;
+
+        wrapper.appendChild(bubble);
+        chatMessages.appendChild(wrapper);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    chatForm.addEventListener('submit', async function (event) {
+        event.preventDefault();
+        const message = chatInput.value.trim();
+        if (!message) return;
+
+        addMessage(message, true);
+        chatInput.value = '';
+
+        try {
+            const response = await fetch('/api/chat/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({ message })
+            });
+
+            const data = await response.json();
+            const reply = data.reply || 'Sorry, I could not respond.';
+            addMessage(reply, false);
+        } catch (error) {
+            addMessage('Something went wrong while contacting the chatbot service.', false);
+        }
+    });
+</script>
+{% endblock %}

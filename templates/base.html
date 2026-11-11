@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}LaptopCare{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #120b1d;
+            --panel: rgba(28, 18, 42, 0.78);
+            --panel-soft: rgba(39, 25, 57, 0.72);
+            --card: rgba(28, 22, 42, 0.82);
+            --card-strong: rgba(168, 85, 247, 0.22);
+            --text: #f3e8ff;
+            --muted: #d8c2f4;
+            --accent: #c084fc;
+            --accent-2: #a78bfa;
+            --accent-3: #e9d5ff;
+            --warning: #fbbf24;
+            --danger: #fca5a5;
+            --white: #ffffff;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background:
+                radial-gradient(circle at top left, rgba(192, 132, 252, 0.22), transparent 32%),
+                radial-gradient(circle at top right, rgba(233, 213, 255, 0.14), transparent 28%),
+                linear-gradient(180deg, #0b0614 0%, #1a1029 100%);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        .glass-shell {
+            background: rgba(36, 24, 52, 0.64);
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(216, 194, 244, 0.15);
+            box-shadow: 0 20px 55px rgba(22, 12, 33, 0.45);
+        }
+
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 16px 0;
+            border-bottom: 1px solid rgba(216, 194, 244, 0.12);
+            background: rgba(17, 11, 23, 0.7);
+            backdrop-filter: blur(14px);
+        }
+
+        .brand-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(192, 132, 252, 0.12);
+            border: 1px solid rgba(216, 194, 244, 0.25);
+            color: var(--white);
+            padding: 8px 14px;
+            border-radius: 999px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+        }
+
+        .brand-mark {
+            width: 10px;
+            height: 10px;
+            background: linear-gradient(135deg, #f5d0fe, #a78bfa);
+            border-radius: 50%;
+            box-shadow: 0 0 12px rgba(216, 180, 254, 0.9);
+        }
+
+        .nav-link-custom {
+            color: var(--muted);
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.2s ease;
+        }
+
+        .nav-link-custom:hover {
+            color: var(--white);
+        }
+
+        .page-wrap {
+            max-width: 1360px;
+            margin: 0 auto;
+            padding: 28px 16px 48px;
+        }
+
+        .card {
+            background: linear-gradient(180deg, rgba(39, 25, 57, 0.9), rgba(23, 17, 33, 0.76));
+            border: 1px solid rgba(216, 194, 244, 0.14);
+            border-radius: 22px;
+            box-shadow: 0 20px 45px rgba(20, 13, 30, 0.3);
+            color: var(--text);
+        }
+
+        .soft-card {
+            padding: 1.1rem 1.2rem;
+        }
+
+        .dashboard-hero {
+            position: relative;
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.38), rgba(76, 29, 149, 0.28));
+            border: 1px solid rgba(216, 194, 244, 0.18);
+            border-radius: 28px;
+            padding: 28px 24px;
+            overflow: hidden;
+            box-shadow: 0 24px 55px rgba(48, 20, 76, 0.32);
+        }
+
+        .dashboard-hero::before {
+            content: "";
+            position: absolute;
+            inset: auto -10% -40% auto;
+            width: 260px;
+            height: 260px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(56, 189, 248, 0.35), transparent 65%);
+        }
+
+        .metric-card {
+            position: relative;
+            overflow: hidden;
+            padding: 1.3rem;
+            min-height: 170px;
+        }
+
+        .metric-card::after {
+            content: "";
+            position: absolute;
+            right: -35px;
+            top: -18px;
+            width: 120px;
+            height: 120px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 50%;
+        }
+
+        .metric-label {
+            color: var(--muted);
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-weight: 700;
+        }
+
+        .metric-value {
+            font-size: clamp(2rem, 2.8vw, 3rem);
+            font-weight: 800;
+            margin-top: 12px;
+            letter-spacing: -0.06em;
+        }
+
+        .metric-trend {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.74rem;
+            font-weight: 700;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: rgba(34, 197, 94, 0.12);
+            color: #9ae6b4;
+            margin-top: 12px;
+        }
+
+        .btn-laptopcare {
+            border: none;
+            border-radius: 12px;
+            padding: 11px 16px;
+            font-weight: 700;
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.28);
+        }
+
+        .btn-primary-soft {
+            background: linear-gradient(135deg, #8b5cf6, #c084fc);
+            color: white;
+        }
+
+        .btn-success-soft {
+            background: linear-gradient(135deg, #a855f7, #d946ef);
+            color: white;
+        }
+
+        .table-wrapper {
+            overflow: hidden;
+            border-radius: 18px;
+        }
+
+        .table {
+            --bs-table-bg: transparent;
+            --bs-table-color: var(--text);
+            --bs-table-border-color: rgba(148, 163, 184, 0.12);
+        }
+
+        .badge-soft {
+            border-radius: 999px;
+            padding: 0.46rem 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+        }
+
+        .bg-status-success { background: rgba(34, 197, 94, 0.12); color: #86efac; }
+        .bg-status-warning { background: rgba(245, 158, 11, 0.12); color: #fbbf24; }
+        .bg-status-danger { background: rgba(248, 113, 113, 0.12); color: #fca5a5; }
+
+        .list-custom {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .list-custom li {
+            padding: 14px 0;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+        }
+
+        .list-custom li:last-child { border-bottom: none; }
+
+        .mini-dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+            background: linear-gradient(135deg, #e9d5ff, #c084fc);
+        }
+
+        @media (max-width: 767.98px) {
+            .dashboard-hero { padding: 20px 18px; }
+            .topbar .d-flex { flex-wrap: wrap; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="topbar">
+        <div class="page-wrap d-flex justify-content-between align-items-center gap-3">
+            <div class="d-flex align-items-center gap-3">
+                <div class="brand-pill">
+                    <span class="brand-mark"></span>
+                    LaptopCare
+                </div>
+            </div>
+            <div class="d-flex align-items-center gap-4">
+                <a href="{% url 'dashboard' %}" class="nav-link-custom">Overview</a>
+                <a href="{% url 'chat' %}" class="nav-link-custom">Chatbot</a>
+                <a href="{% url 'reports' %}" class="nav-link-custom">Reports</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="page-wrap">
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>

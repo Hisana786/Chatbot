@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block title %}Reports | LaptopCare{% endblock %}
+
+{% block content %}
+<div class="dashboard-hero glass-shell mb-4">
+    <div class="row align-items-center g-3">
+        <div class="col-lg-8">
+            <div class="d-flex align-items-center gap-2 mb-3">
+                <span class="badge-soft bg-status-success">LIVE</span>
+                <span class="text-uppercase small text-white-50" style="letter-spacing: 0.1em;">Business reports</span>
+            </div>
+            <h1 class="fw-bold mb-2" style="font-size: clamp(2rem, 3vw, 2.8rem); letter-spacing: -0.06em;">Performance overview</h1>
+            <p class="mb-0 text-white-50" style="max-width: 620px;">Track sales, inventory health, fulfillment, and product performance across your LaptopCare operations.</p>
+        </div>
+        <div class="col-lg-4 text-lg-end">
+            <a href="{% url 'dashboard' %}" class="btn btn-laptopcare btn-primary-soft">Back to dashboard</a>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-md-6 col-xl-3">
+        <div class="card metric-card soft-card" style="background: linear-gradient(135deg, rgba(192,132,252,0.22), rgba(15,23,42,0.85));">
+            <div class="metric-label">Sales total</div>
+            <div class="metric-value">{{ sales_total }}</div>
+            <div class="metric-trend">+18.2% MoM</div>
+        </div>
+    </div>
+    <div class="col-md-6 col-xl-3">
+        <div class="card metric-card soft-card" style="background: linear-gradient(135deg, rgba(168,85,247,0.24), rgba(15,23,42,0.85));">
+            <div class="metric-label">Inventory value</div>
+            <div class="metric-value">{{ inventory_value }}</div>
+            <div class="metric-trend">Healthy mix</div>
+        </div>
+    </div>
+    <div class="col-md-6 col-xl-3">
+        <div class="card metric-card soft-card" style="background: linear-gradient(135deg, rgba(216,180,254,0.20), rgba(15,23,42,0.85));">
+            <div class="metric-label">Low-stock items</div>
+            <div class="metric-value">{{ low_stock_count }}</div>
+            <div class="metric-trend">Needs review</div>
+        </div>
+    </div>
+    <div class="col-md-6 col-xl-3">
+        <div class="card metric-card soft-card" style="background: linear-gradient(135deg, rgba(244,114,182,0.18), rgba(15,23,42,0.85));">
+            <div class="metric-label">Order completion</div>
+            <div class="metric-value">{{ order_completion }}</div>
+            <div class="metric-trend">Fast fulfillment</div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-xl-8">
+        <div class="card p-4 h-100">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h3 class="h5 mb-0 fw-bold">Top products</h3>
+                <span class="text-white-50 small">Last 30 days</span>
+            </div>
+            <div class="table-wrapper">
+                <table class="table align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Sales</th>
+                            <th>Revenue</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for product in top_products %}
+                        <tr>
+                            <td>{{ product.name }}</td>
+                            <td>{{ product.sales }}</td>
+                            <td>{{ product.revenue }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-4">
+        <div class="card p-4 h-100">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h3 class="h5 mb-0 fw-bold">Order status</h3>
+                <span class="badge-soft bg-status-success">updated</span>
+            </div>
+            {% for item in status_breakdown %}
+            <div class="mb-3">
+                <div class="d-flex justify-content-between mb-1">
+                    <span>{{ item.label }}</span>
+                    <strong>{{ item.value }}%</strong>
+                </div>
+                <div class="progress" style="height: 10px; background: rgba(255,255,255,0.06); border-radius: 999px;">
+                    <div class="progress-bar" style="width: {{ item.value }}%; background: {{ item.color }}; border-radius: 999px;"></div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
